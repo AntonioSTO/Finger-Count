@@ -1,7 +1,9 @@
 import cv2
 import mediapipe as mp
+import serial
 
 video = cv2.VideoCapture(0)
+arduino = serial.Serial('COM14', 9600)
 
 hand = mp.solutions.hands
 Hand = hand.Hands(max_num_hands=1)
@@ -36,11 +38,13 @@ while True:
                     contador += 1
 
         cv2.putText(img, str(contador), (100,100), font, 4, (0,0,0), 5)
+        arduino.write(str(contador).encode() + b'\n')
 
 
     cv2.imshow("hands", img)
     if cv2.waitKey(1) & 0xFF == ord('q'):
         break
+        arduino.close()
 
 
 
